@@ -183,6 +183,10 @@ p{
   font-size:18px;
 
   transition:.3s;
+  
+  max-height:300px;
+
+overflow-y:auto;
 }
 
 .editor:focus{
