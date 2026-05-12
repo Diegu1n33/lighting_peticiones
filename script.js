@@ -99,13 +99,14 @@ ${tarjeta.texto}
 
 
 
-    // EDITAR NOMBRE
+
+    // GUARDAR NOMBRE AL SALIR
     document
     .querySelectorAll(".editable-name")
 
     .forEach(element => {
 
-      element.addEventListener("input", async () => {
+      element.addEventListener("blur", async () => {
 
         const id = element.dataset.id;
 
@@ -116,18 +117,20 @@ ${tarjeta.texto}
 
           nombre: element.innerText
         });
+
       });
     });
 
 
 
-    // EDITAR TEXTO
+
+    // GUARDAR TEXTO AL SALIR
     document
     .querySelectorAll(".editable-text")
 
     .forEach(element => {
 
-      element.addEventListener("input", async () => {
+      element.addEventListener("blur", async () => {
 
         const id = element.dataset.id;
 
@@ -138,12 +141,14 @@ ${tarjeta.texto}
 
           texto: element.innerText
         });
+
       });
     });
 
 
 
-    // ELIMINAR TARJETA
+
+    // ELIMINAR
     document
     .querySelectorAll(".delete-btn")
 
