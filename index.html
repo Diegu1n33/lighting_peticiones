@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Muro de Peticiones</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <img src="LOGO.png" alt="Logo Iglesia" class="logo">
+
+    <h1>Muro de Peticiones</h1>
+
+    <p>Comparte tus peticiones y oremos juntos 🙏</p>
+  </header>
+<div class="font-controls">
+
+  <span>A-</span>
+
+  <input
+    type="range"
+    id="fontSlider"
+    min="14"
+    max="30"
+    value="18"
+  >
+
+  <span>A+</span>
+
+</div>
+  <main>
+
+    <div class="cards-container">
+
+    </div>
+
+<div class="new-card-form">
+
+  <input
+    type="text"
+    id="nombreInput"
+    placeholder="Nombre"
+  >
+
+  <input
+    type="text"
+    id="peticionInput"
+    placeholder="Primera petición"
+  >
+
+  <button class="new-card-btn">
+    + Crear tarjeta
+  </button>
+
+</div>
+
+  </main>
+
+  <script src="script.js"></script>
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+
+import {
+
+  getFirestore,
+
+  collection,
+
+  addDoc,
+
+  onSnapshot,
+
+  doc,
+
+  updateDoc,
+
+  deleteDoc
+
+}
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+
+const firebaseConfig = {
+
+  apiKey: "AIzaSyAU7hpdYfTfxjgvmLY5S1hS5Qr7gGymIpw",
+
+  authDomain: "muro-peticiones.firebaseapp.com",
+
+  projectId: "muro-peticiones",
+
+  storageBucket: "muro-peticiones.firebasestorage.app",
+
+  messagingSenderId: "144195556961",
+
+  appId: "1:144195556961:web:b2456a9e576cd94fab7c20"
+};
+
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+
+// HACER FIREBASE GLOBAL
+window.db = db;
+
+window.firebaseFirestore = {
+
+  collection,
+
+  addDoc,
+
+  onSnapshot,
+
+  doc,
+
+  updateDoc,
+
+  deleteDoc
+};
+
+console.log("Firebase conectado 🔥");
+
+</script>
+</body>
+</html>
