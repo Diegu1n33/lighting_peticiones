@@ -1,26 +1,29 @@
 const cardsContainer = document.querySelector(".cards-container");
-
 const newCardBtn = document.querySelector(".new-card-btn");
-
 const nombreInput = document.querySelector("#nombreInput");
-
 const peticionInput = document.querySelector("#peticionInput");
-
 const fontSlider = document.querySelector("#fontSlider");
 
+let isEditing = false;
 
-// TAMAÑO TEXTO
-fontSlider.addEventListener("input", () => {
 
-  const editors = document.querySelectorAll(".editor");
+// CAMBIAR TAMAÑO DE TEXTO
+if (fontSlider) {
 
-  editors.forEach(editor => {
+  fontSlider.addEventListener("input", () => {
 
-    editor.style.fontSize =
-      fontSlider.value + "px";
+    const editors = document.querySelectorAll(".editor");
+
+    editors.forEach(editor => {
+
+      editor.style.fontSize =
+        fontSlider.value + "px";
+
+    });
+
   });
-});
 
+}
 
 
 window.addEventListener("load", () => {
@@ -28,29 +31,22 @@ window.addEventListener("load", () => {
   const db = window.db;
 
   const {
-
     collection,
-
     addDoc,
-
     onSnapshot,
-
     doc,
-
     updateDoc,
-
     deleteDoc
-
   } = window.firebaseFirestore;
-
 
   const tarjetasRef =
     collection(db, "tarjetas");
 
 
-
   // TIEMPO REAL
   onSnapshot(tarjetasRef, (snapshot) => {
+
+    if (isEditing) return;
 
     cardsContainer.innerHTML = "";
 
@@ -62,9 +58,7 @@ window.addEventListener("load", () => {
 
       card.classList.add("card");
 
-
       card.innerHTML = `
-
         <div class="card-header">
 
           <h2
@@ -72,7 +66,7 @@ window.addEventListener("load", () => {
             data-id="${firebaseDoc.id}"
             class="editable-name"
           >
-            ${tarjeta.nombre}
+            ${tarjeta.nombre || ""}
           </h2>
 
           <button
@@ -89,113 +83,127 @@ window.addEventListener("load", () => {
           contenteditable="true"
           data-id="${firebaseDoc.id}"
         >
-${tarjeta.texto}
+${tarjeta.texto || ""}
         </div>
-
       `;
 
       cardsContainer.appendChild(card);
+
     });
 
 
-
-
-    // GUARDAR NOMBRE AL SALIR
+    // EDITAR NOMBRE
     document
-    .querySelectorAll(".editable-name")
+      .querySelectorAll(".editable-name")
+      .forEach(element => {
 
-    .forEach(element => {
+        element.addEventListener("focus", () => {
 
-      element.addEventListener("blur", async () => {
+          isEditing = true;
 
-        const id = element.dataset.id;
+        });
 
-        const tarjetaDoc =
-          doc(db, "tarjetas", id);
+        element.addEventListener("blur", async () => {
 
-        await updateDoc(tarjetaDoc, {
+          isEditing = false;
 
-          nombre: element.innerText
+          const id = element.dataset.id;
+
+          const tarjetaDoc =
+            doc(db, "tarjetas", id);
+
+          await updateDoc(tarjetaDoc, {
+
+            nombre: element.innerText
+
+          });
+
         });
 
       });
-    });
 
 
-
-
-    // GUARDAR TEXTO AL SALIR
+    // EDITAR TEXTO
     document
-    .querySelectorAll(".editable-text")
+      .querySelectorAll(".editable-text")
+      .forEach(element => {
 
-    .forEach(element => {
+        element.addEventListener("focus", () => {
 
-      element.addEventListener("blur", async () => {
+          isEditing = true;
 
-        const id = element.dataset.id;
+        });
 
-        const tarjetaDoc =
-          doc(db, "tarjetas", id);
+        element.addEventListener("blur", async () => {
 
-        await updateDoc(tarjetaDoc, {
+          isEditing = false;
 
-          texto: element.innerText
+          const id = element.dataset.id;
+
+          const tarjetaDoc =
+            doc(db, "tarjetas", id);
+
+          await updateDoc(tarjetaDoc, {
+
+            texto: element.innerText
+
+          });
+
         });
 
       });
-    });
 
 
-
-
-    // ELIMINAR
+    // ELIMINAR TARJETA
     document
-    .querySelectorAll(".delete-btn")
+      .querySelectorAll(".delete-btn")
+      .forEach(button => {
 
-    .forEach(button => {
+        button.addEventListener("click", async () => {
 
-      button.addEventListener("click", async () => {
+          const id = button.dataset.id;
 
-        const id = button.dataset.id;
+          const confirmar =
+            confirm("¿Eliminar tarjeta?");
 
-        const confirmar =
-          confirm("¿Eliminar tarjeta?");
+          if (!confirmar) return;
 
-        if(!confirmar) return;
+          await deleteDoc(
+            doc(db, "tarjetas", id)
+          );
 
-        await deleteDoc(
-          doc(db, "tarjetas", id)
-        );
+        });
+
       });
-    });
 
   });
-
-
 
 
   // CREAR TARJETA
-  newCardBtn.addEventListener("click", async () => {
+  if (newCardBtn) {
 
-    const nombre = nombreInput.value;
+    newCardBtn.addEventListener("click", async () => {
 
-    const texto = peticionInput.value;
+      const nombre =
+        nombreInput.value.trim();
 
+      const texto =
+        peticionInput.value.trim();
 
-    if(!nombre) return;
+      if (!nombre) return;
 
+      await addDoc(tarjetasRef, {
 
-    await addDoc(tarjetasRef, {
+        nombre,
+        texto
 
-      nombre: nombre,
+      });
 
-      texto: texto
+      nombreInput.value = "";
+      peticionInput.value = "";
+
     });
 
-
-    nombreInput.value = "";
-
-    peticionInput.value = "";
-  });
+  }
 
 });
