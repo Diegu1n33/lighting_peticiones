@@ -1,8 +1,5 @@
 import os
 
-os.environ["DATABASE_URL"] = "sqlite+aiosqlite:///./test.db"
-os.environ["ADMIN_PASSWORD"] = "secreto"
-
 import pytest
 from fastapi.testclient import TestClient
 
