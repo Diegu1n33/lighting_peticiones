@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+@theme {
+  --color-noche: #050816;
+  --color-panel: #0d1327;
+  --color-borde: #232c52;
+  --color-azul: #4f8cff;
+  --color-violeta: #7b61ff;
+  --color-suave: #a8b0c8;
+}
+
+:root {
+  --tamano-texto: 18px;
+}
+
+body {
+  background: radial-gradient(circle at top, #111827, var(--color-noche) 70%);
+  background-attachment: fixed;
+  color: white;
+  min-height: 100vh;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-azul);
+  outline-offset: 2px;
+}
